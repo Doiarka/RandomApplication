@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomApplications", "Rando
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomApplications.Tests", "RandomApplications.Tests\RandomApplications.Tests.csproj", "{F39BDC69-D24F-4291-8601-1E0A432F14F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RandomApplications.Forms", "RandomApplications.Forms\RandomApplications.Forms.csproj", "{47F33CC2-00A2-4277-96A3-A3EBA41A0C01}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{F39BDC69-D24F-4291-8601-1E0A432F14F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F39BDC69-D24F-4291-8601-1E0A432F14F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F39BDC69-D24F-4291-8601-1E0A432F14F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47F33CC2-00A2-4277-96A3-A3EBA41A0C01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47F33CC2-00A2-4277-96A3-A3EBA41A0C01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47F33CC2-00A2-4277-96A3-A3EBA41A0C01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47F33CC2-00A2-4277-96A3-A3EBA41A0C01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
