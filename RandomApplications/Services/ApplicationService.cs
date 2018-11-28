@@ -10,7 +10,7 @@ using System.Configuration;
 
 namespace RandomApplications.Services
 {
-    public class ApplicationService
+    public class ApplicationService : IApplicationService
     {
         private readonly string defaultConnection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
 

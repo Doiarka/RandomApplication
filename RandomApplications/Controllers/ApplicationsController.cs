@@ -6,17 +6,25 @@ using System.Web.Mvc;
 using RandomApplications.Services;
 using System.Configuration;
 using System.Data;
+using Autofac;
 
 namespace RandomApplications.Controllers
 {
     public class ApplicationsController : Controller
     {
         ApplicationService appServ = new ApplicationService();
-
+        //private readonly IApplicationService _appService;
         // GET: List
+
+        /*public ApplicationsController(IApplicationService appService)
+        {
+            _appService = appService;
+        }*/
+
         public ActionResult List()
         {
             var apps = appServ.GetAllApps().GetAwaiter().GetResult();
+            //var apps = _appService.GetAllApps().GetAwaiter().GetResult();
 
             return View(apps);
         }
