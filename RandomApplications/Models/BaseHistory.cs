@@ -77,5 +77,11 @@ namespace RandomApplications.Models
                 StatusNewId = (int)value;
             }
         }
+
+        ///<summary>
+        /// комментарий
+        /// </summary>
+        [Column]
+        public string Comment { get; set; }
     }
 }

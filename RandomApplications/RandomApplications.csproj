@@ -237,6 +237,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Applications\List.cshtml" />
+    <Content Include="Views\Applications\Details.cshtml" />
+    <Content Include="Views\Applications\Create.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

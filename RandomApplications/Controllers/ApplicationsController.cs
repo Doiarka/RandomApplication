@@ -32,7 +32,9 @@ namespace RandomApplications.Controllers
         // GET: Applications/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var app = appServ.GetDetailApp(id).GetAwaiter().GetResult(); ;
+
+            return View(app);
         }
 
         // GET: Applications/Create
@@ -48,8 +50,11 @@ namespace RandomApplications.Controllers
             try
             {
                 // TODO: Add insert logic here
+                var title = collection[1];
+                var description = collection[2];
+                appServ.CreateApp(title, description).GetAwaiter().GetResult();
 
-                return RedirectToAction("Index");
+                return RedirectToAction("List");
             }
             catch
             {

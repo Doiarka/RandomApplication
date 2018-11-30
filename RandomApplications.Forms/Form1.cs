@@ -17,7 +17,7 @@ namespace RandomApplications.Forms
     {
         //static string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=randomapp;Integrated Security=True";
         static string connectionString = @"Data Source =.\SQLEXPRESS;AttachDbFileName=|DataDirectory|\randomapp.mdf;Integrated Security = True; User Instance = True; MultipleActiveResultSets=True";
-               DataContext db = new DataContext(connectionString);
+        DataContext db = new DataContext(connectionString);
 
         public Form1()
         {

@@ -1,15 +1,43 @@
-﻿@model IEnumerable<RandomApplications.Models.BaseApplication>
+﻿@using RandomApplications.Models
+@model IEnumerable<RandomApplications.Models.BaseApplication>
 
 @{
     ViewBag.Title = "Applications";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Applications</h2>
+<h2>Список заявок</h2>
 
 <p>
     @Html.ActionLink("Создать заявку", "Create")
 </p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DropDownList("Статус",
+                EnumHelper.GetSelectList(typeof(Status)) ,
+                "Выберите статус",
+                new { @class = "form-control" })
+        </th>
+        <th>
+            @Html.LabelFor(model => model, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.FirstOrDefault().DateModify, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.FirstOrDefault().DateModify, "", new { @class = "text-danger" })
+            </div>
+        </th>
+        <th>
+            <div class="form-group">
+                @Html.LabelFor(model => model.FirstOrDefault().DateModify, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FirstOrDefault().DateModify, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.FirstOrDefault().DateModify, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </th>
+        <th></th>
+    </tr>
+</table>
 <table class="table">
     <tr>
         <th>
@@ -26,8 +54,7 @@
         </th>
         <th></th>
     </tr>
-
-    @foreach (var item in Model)
+    @foreach (var item in Model.Reverse())
     {
         var statusTitle = string.Empty;
         switch (item.StatusId)

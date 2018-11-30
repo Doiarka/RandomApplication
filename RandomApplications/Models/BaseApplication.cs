@@ -1,4 +1,6 @@
-﻿using System.Data.Linq.Mapping;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Linq.Mapping;
 using System.ComponentModel.DataAnnotations;
 
 namespace RandomApplications.Models
@@ -48,6 +50,19 @@ namespace RandomApplications.Models
                 StatusId = (int)value;
             }
         }
+
+        ///<summary>
+        /// дата изменения
+        /// </summary>
+        [Column]
+        [DataType(DataType.Date)]
+        public DateTime DateModify { get; set; }
+
+        ///<summary>
+        /// список ид историй изменения
+        /// </summary>
+        [Column]
+        public List<long> HistoryIds { get; set; } = new List<long>();
     }
 
     ///<summary>
