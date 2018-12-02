@@ -16,7 +16,8 @@ namespace RandomApplications.Forms
     public partial class Form1 : Form
     {
         //static string connectionString = @"Data Source=.\SQLEXPRESS;Initial Catalog=randomapp;Integrated Security=True";
-        static string connectionString = @"Data Source =.\SQLEXPRESS;AttachDbFileName=|DataDirectory|\randomapp.mdf;Integrated Security = True; User Instance = True; MultipleActiveResultSets=True";
+        //static string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFileName=|DataDirectory|\randomapp.mdf;Integrated Security=True;User Instance=True;MultipleActiveResultSets=True";
+        static string connectionString = @"Data Source=.\SQLEXPRESS;AttachDbFileName=C:\Users\zibo9\source\repos\RandomApplications\RandomApplications\App_Data\randomapp.mdf;Integrated Security=True;User Instance=True;MultipleActiveResultSets=True";
         DataContext db = new DataContext(connectionString);
 
         public Form1()
@@ -50,9 +51,16 @@ namespace RandomApplications.Forms
         {
             openListBox.Items.Clear();
             var apps = db.GetTable<BaseApplication>();
-            var openApps = apps.Where(x => x.StatusId == 0 || x.StatusId == 2).ToList();
+            var openApps = apps.Where(x => x.StatusId == 0 || x.StatusId == 2);
             foreach (var app in openApps)
+            {
+                List<long> test = new List<long>();
+                //MessageBox.Show(app.);
+                test.Add(app.Id);
+                
                 openListBox.Items.Add(app.Title);
+            }
+                
         }
 
         private void UpdateReadyApps()

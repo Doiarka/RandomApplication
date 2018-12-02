@@ -2,9 +2,10 @@
     <h1>Произвольные заявки</h1>
     <p class="lead">Сервис позволяет создать заявку, указав название и описание. Изменить статус завяки на "Открыта", "Решена", "Возвращена" и "Закрыта". Вы можете просмотреть историю изменения статусов заявок, а также воспользоваться фильтром.</p>
     <p>
-        <a style="min-width: 200px; width: 30%; margin: 10px" id="createApp" class="btn btn-primary btn-lg">Новая заявка &raquo;</a>
-        <a style="min-width: 200px; width: 30%; margin: 10px" id="getApps" class="btn btn-primary btn-lg">Все заявки &raquo;</a>
-        <a style="min-width: 200px; width: 30%; margin: 10px" id="getHistory" class="btn btn-primary btn-lg">История &raquo;</a>
+        @Html.ActionLink("К списку заявок", "List", "Applications")
+        <!--<a style="min-width: 200px; width: 30%; margin: 10px" id="createApp" class="btn btn-primary btn-lg">Новая заявка &raquo;</a>
+    <a style="min-width: 200px; width: 30%; margin: 10px" id="getApps" class="btn btn-primary btn-lg">Все заявки &raquo;</a>
+    <a style="min-width: 200px; width: 30%; margin: 10px" id="getHistory" class="btn btn-primary btn-lg">История &raquo;</a>-->
     </p>
 </div>
 <div class="row">

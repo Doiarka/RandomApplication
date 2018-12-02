@@ -8,6 +8,11 @@ using System.Web;
 using RandomApplications.Models;
 using System.Configuration;
 using System.Data.Linq;
+using System.IO;
+using Newtonsoft;
+using Newtonsoft.Json;
+using RandomApplications.Response;
+using RandomApplications.Utils;
 
 namespace RandomApplications.Services
 {
@@ -15,80 +20,52 @@ namespace RandomApplications.Services
     {
         private static readonly string defaultConnection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
         DataContext db = new DataContext(defaultConnection);
-        //SqlConnection con = new SqlConnection(defaultConnection);
+        SqlConnection con = new SqlConnection(defaultConnection);
 
-        public async Task<List<BaseApplication>> GetAllApps()
+        public async Task<ApplicationsListViewModel> GetAllApps(ApplicationsListViewModel avm)
         {
-            var con = new SqlConnection(defaultConnection);
             try
             {
                 con.Open();
-
-                var cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = "SELECT * FROM BaseApplication";
-                cmd.ExecuteNonQuery();
-                var da = new SqlDataAdapter(cmd);
-                var dt = new DataTable();
-                da.Fill(dt);
-                //var apps = new List<BaseApplication>();
-
-                var apps = (from DataRow row in dt.Rows
-
-                    select new BaseApplication
-                    {
-                        Id = (long)row["Id"],
-                        Title = row["Title"].ToString(),
-                        Description = row["Description"].ToString(),
-                        StatusId = (int)row["StatusId"]
-
-                    }).ToList();
-
-                /*foreach (var item in dt.Rows)
-                {
-                    apps.Add(new BaseApplication
-                    {
-                        Id = item[0],
-                    });
-                }*/
+                avm.Apps = FilterApps(avm);
                 con.Close();
 
-                return apps;
+                return avm;
             }
             catch (Exception ex)
             {
-                return new List<BaseApplication>();
+                return avm;
             }
+        }
+
+        public IQueryable<BaseApplication> FilterApps(ApplicationsListViewModel searchModel)
+        {
+            var result = db.GetTable<BaseApplication>().AsQueryable();
+            if (searchModel != null)
+            {
+                if (searchModel.statusList.SelectedValue != null)
+                    result = result.Where(x => x.Status == (Status)searchModel.statusList.SelectedValue);
+                if (searchModel.DateTo.HasValue)
+                    result = result.Where(x => x.DateModify <= searchModel.DateTo);
+                if (searchModel.DateFrom.HasValue)
+                    result = result.Where(x => x.DateModify >= searchModel.DateFrom);
+                /*if (searchModel.Status.HasValue)
+                    result = result.Where(x => x.Status == searchModel.Status);
+                if (searchModel.DateTo.HasValue)
+                    result = result.Where(x => x.DateModify <= searchModel.DateTo);
+                if (searchModel.DateFrom.HasValue)
+                    result = result.Where(x => x.DateModify >= searchModel.DateFrom);*/
+            }
+            return result.OrderByDescending(x => x.DateModify);
         }
 
         public async Task<BaseApplication> GetDetailApp(long id)
         {
-            var con = new SqlConnection(defaultConnection);
             try
             {
                 con.Open();
-                var cmd = new SqlCommand();
-                cmd.Connection = con;
-                cmd.CommandType = CommandType.Text;
-                cmd.CommandText = $"SELECT * FROM BaseApplication WHERE id = {id}";
-                cmd.ExecuteNonQuery();
-                var da = new SqlDataAdapter(cmd);
-                var dt = new DataTable();
-                da.Fill(dt);
-                //var apps = new List<BaseApplication>();
-
-                var app = (from DataRow row in dt.Rows
-
-                    select new BaseApplication
-                    {
-                        Id = (long)row["Id"],
-                        Title = row["Title"].ToString(),
-                        Description = row["Description"].ToString(),
-                        StatusId = (int)row["StatusId"]
-
-                    }).FirstOrDefault();
-
+                var apps = db.GetTable<BaseApplication>();
+                var app = apps.FirstOrDefault(x => x.Id == id);
                 con.Close();
 
                 return app;
@@ -101,7 +78,6 @@ namespace RandomApplications.Services
 
         public async Task CreateApp(string title, string description)
         {
-            var con = new SqlConnection(defaultConnection);
             try
             {
                 con.Open();
@@ -112,7 +88,8 @@ namespace RandomApplications.Services
                     Title = title,
                     Description = description,
                     Status = Status.Open,
-                    DateModify = now
+                    DateModify = now,
+                    HistoryIds = new List<long>().SerializeToJson()
                 };
 
                 apps.InsertOnSubmit(app);
@@ -122,7 +99,7 @@ namespace RandomApplications.Services
                 var history = new BaseHistory
                 {
                     AppId = app.Id,
-                    DateModify = DateTime.UtcNow,
+                    DateModify = now,
                     StatusOld = null,
                     StatusNew = app.Status,
                     Comment = null
@@ -131,8 +108,12 @@ namespace RandomApplications.Services
                 histories.InsertOnSubmit(history);
                 
                 db.SubmitChanges();
-
-                app.HistoryIds.Add(history.Id);
+                var appHistory = new JsonSerializer().Deserialize<List<long>>
+                (new JsonTextReader
+                    (new StringReader(app.HistoryIds)));
+                appHistory.Add(history.Id);
+                app.HistoryIds = appHistory.SerializeToJson();
+                //app.HistoryIds = string.Join(",", history.Id.ToString());
                 db.SubmitChanges();
 
                 con.Close();
@@ -142,15 +123,84 @@ namespace RandomApplications.Services
 
             }
         }
+
+        public async Task EditApp(long id, int statusId = 1, string comment = null)
+        {
+            try
+            {
+                if (comment == null)
+                    return;
+
+                con.Open();
+                var now = DateTime.UtcNow;
+
+                var apps = db.GetTable<BaseApplication>();
+                var app = apps.FirstOrDefault(x => x.Id == id);
+                var appStatusOld = app.Status;
+                app.StatusId = statusId;
+                /*if (app.Status == appStatusOld)
+                {
+                    //con.Close();
+                    return;
+                }*/
+
+                app.DateModify = DateTime.UtcNow;
+                db.SubmitChanges();
+
+                var histories = db.GetTable<BaseHistory>();
+                var history = new BaseHistory
+                {
+                    AppId = app.Id,
+                    DateModify = now,
+                    StatusOld = appStatusOld,
+                    StatusNew = app.Status,
+                    Comment = comment
+                };
+
+                histories.InsertOnSubmit(history);
+
+                db.SubmitChanges();
+                var appHistory = new JsonSerializer().Deserialize<List<long>>
+                (new JsonTextReader
+                    (new StringReader(app.HistoryIds)));
+                appHistory.Add(history.Id);
+                app.HistoryIds = appHistory.SerializeToJson();
+                db.SubmitChanges();
+            }
+            catch (Exception ex)
+            {
+
+            }
+            finally
+            {
+                con.Close();
+            }
+        }
+
+        public async Task<List<BaseHistory>> GetAppHistories(long id)
+        {
+            try
+            {
+                var histories = db.GetTable<BaseHistory>().Where(x => x.AppId == id);
+
+                return histories.OrderByDescending(x => x.DateModify).ToList();
+            }
+            catch (Exception ex)
+            {
+                return new List<BaseHistory>();
+            }
+        }
     }
 
     public interface IApplicationService
     {
-        Task<List<BaseApplication>> GetAllApps();
+        Task<ApplicationsListViewModel> GetAllApps(ApplicationsListViewModel avm);
 
         Task<BaseApplication> GetDetailApp(long id);
 
         Task CreateApp(string title, string description);
+
+        Task<List<BaseHistory>> GetAppHistories(long id);
     }
 }
 

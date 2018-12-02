@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Linq.Mapping;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 
 namespace RandomApplications.Models
 {
@@ -27,6 +28,8 @@ namespace RandomApplications.Models
         /// описание
         /// </summary>
         [Column]
+        [DataType(DataType.MultilineText)]
+        [UIHint("Description")]
         public string Description { get; set; }
 
         ///<summary>
@@ -39,6 +42,7 @@ namespace RandomApplications.Models
         /// статус
         /// </summary>
         [EnumDataType(typeof(Status))]
+        [Range(1, int.MaxValue, ErrorMessage = "Select a correct license")]
         public Status Status
         {
             get
@@ -55,14 +59,31 @@ namespace RandomApplications.Models
         /// дата изменения
         /// </summary>
         [Column]
-        [DataType(DataType.Date)]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         public DateTime DateModify { get; set; }
 
         ///<summary>
         /// список ид историй изменения
         /// </summary>
+        /*public virtual List<long> HistoryIdsList
+        {
+            get
+            {
+                return HistoryIds == null ?
+                    new List<long>() :
+                    HistoryIds.Split(',').Select(n => Convert.ToInt64(n)).ToList();
+            }
+            set
+            {
+                HistoryIds = string.Join(",", value);
+            }
+        }*/
+
+        ///<summary>
+        /// список ид историй изменения
+        /// </summary>
         [Column]
-        public List<long> HistoryIds { get; set; } = new List<long>();
+        public string HistoryIds { get; set; }
     }
 
     ///<summary>
@@ -73,19 +94,20 @@ namespace RandomApplications.Models
         ///<summary>
         /// открыта
         /// </summary>
-        Open,
+        [Display(Name = "Открыта")]
+        Open = 1,
         ///<summary>
         /// решена
         /// </summary>
-        Ready,
+        Ready = 2,
         ///<summary>
         /// возврат
         /// </summary>
-        Return,
+        Return = 3,
         ///<summary>
         /// закрыта
         /// </summary>
-        Close
+        Close = 4
     }
 }
  
