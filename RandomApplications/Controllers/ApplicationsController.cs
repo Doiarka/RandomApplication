@@ -22,14 +22,21 @@ namespace RandomApplications.Controllers
         ApplicationService appServ = new ApplicationService();
 
         // GET: Applications/List
-        public ActionResult List(string selectedStatus)
+        public ActionResult List(FormCollection collection)
         {
-            ViewBag.SelectedStatus = selectedStatus;
+            var statusStr = collection["status"] ?? "0";
+            var dateFrom = collection["dateFrom"] ?? null;
+            var dateTo = collection["dateTo"] ?? null;
             var apps = from s in db.GetTable<BaseApplication>()
                 select s;
-            var statusId = Convert.ToInt32(selectedStatus);
+            var statusId = statusStr == "Все" ? 0 : statusStr == "" ? 0 : int.Parse(statusStr);
             if (statusId != 0)
                 apps = apps.Where(x => x.StatusId == statusId);
+            if (DateTime.TryParse(dateFrom, out DateTime from))
+                apps = apps.Where(x => x.DateModify >= from);
+            if (DateTime.TryParse(dateTo, out DateTime to))
+                apps = apps.Where(x => x.DateModify <= to);
+
             return View(apps.ToList());
         }
 
