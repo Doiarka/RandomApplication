@@ -22,41 +22,9 @@ namespace RandomApplications.Services
         DataContext db = new DataContext(defaultConnection);
         SqlConnection con = new SqlConnection(defaultConnection);
 
-        public async Task<ApplicationsListViewModel> GetAllApps(ApplicationsListViewModel avm)
+        public async Task GetAllApps()
         {
-            try
-            {
-                con.Open();
-                avm.Apps = FilterApps(avm);
-                con.Close();
 
-                return avm;
-            }
-            catch (Exception ex)
-            {
-                return avm;
-            }
-        }
-
-        public IQueryable<BaseApplication> FilterApps(ApplicationsListViewModel searchModel)
-        {
-            var result = db.GetTable<BaseApplication>().AsQueryable();
-            if (searchModel != null)
-            {
-                if (searchModel.statusList.SelectedValue != null)
-                    result = result.Where(x => x.Status == (Status)searchModel.statusList.SelectedValue);
-                if (searchModel.DateTo.HasValue)
-                    result = result.Where(x => x.DateModify <= searchModel.DateTo);
-                if (searchModel.DateFrom.HasValue)
-                    result = result.Where(x => x.DateModify >= searchModel.DateFrom);
-                /*if (searchModel.Status.HasValue)
-                    result = result.Where(x => x.Status == searchModel.Status);
-                if (searchModel.DateTo.HasValue)
-                    result = result.Where(x => x.DateModify <= searchModel.DateTo);
-                if (searchModel.DateFrom.HasValue)
-                    result = result.Where(x => x.DateModify >= searchModel.DateFrom);*/
-            }
-            return result.OrderByDescending(x => x.DateModify);
         }
 
         public async Task<BaseApplication> GetDetailApp(long id)
@@ -194,7 +162,7 @@ namespace RandomApplications.Services
 
     public interface IApplicationService
     {
-        Task<ApplicationsListViewModel> GetAllApps(ApplicationsListViewModel avm);
+        Task GetAllApps();
 
         Task<BaseApplication> GetDetailApp(long id);
 

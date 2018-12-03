@@ -6,7 +6,6 @@ using System.Web.Mvc;
 using RandomApplications.Services;
 using System.Configuration;
 using System.Data;
-using System.Data.Entity;
 using System.Data.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -18,50 +17,20 @@ namespace RandomApplications.Controllers
 {
     public class ApplicationsController : Controller
     {
+        private static readonly string defaultConnection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        DataContext db = new DataContext(defaultConnection);
         ApplicationService appServ = new ApplicationService();
 
         // GET: Applications/List
-        public ActionResult List(ApplicationsListViewModel avm)
+        public ActionResult List(string selectedStatus)
         {
-            //var apps = appServ.GetAllApps().GetAwaiter().GetResult();
-            //var apps = _appService.GetAllApps().GetAwaiter().GetResult();
-            //var status = (Status)Convert.ToInt32(collection["Статус"]);
-            //ViewBag.Apps = appServ.GetAllApps(status).GetAwaiter().GetResult();
-            avm.statusList = new SelectList(
-                new List<SelectListItem>
-                {
-                    new SelectListItem { Selected = false, Text = "Открыта", Value = ((int)Status.Open).ToString()},
-                    new SelectListItem { Selected = false, Text = "Решена", Value = ((int)Status.Ready).ToString()},
-                    new SelectListItem { Selected = false, Text = "Возвращена", Value = ((int)Status.Return).ToString()},
-                    new SelectListItem { Selected = false, Text = "Закрыта", Value = ((int)Status.Close).ToString()},
-                }, "Value", "Text");
-            avm = appServ.GetAllApps(avm).GetAwaiter().GetResult();
-            
-
-            return View(avm);
-        }
-
-        // POST: Applications/List
-        [HttpPost]
-        public ActionResult List(ApplicationsListViewModel avm, string smth)
-        {
-            //var apps = appServ.GetAllApps().GetAwaiter().GetResult();
-            //var apps = _appService.GetAllApps().GetAwaiter().GetResult();
-            //var status = (Status)Convert.ToInt32(collection["Статус"]);
-            //ViewBag.Apps = appServ.GetAllApps(status).GetAwaiter().GetResult();
-            avm.statusList = new SelectList(
-                new List<SelectListItem>
-                {
-                    new SelectListItem { Selected = false, Text = "Открыта", Value = ((int)Status.Open).ToString()},
-                    new SelectListItem { Selected = false, Text = "Решена", Value = ((int)Status.Ready).ToString()},
-                    new SelectListItem { Selected = false, Text = "Возвращена", Value = ((int)Status.Return).ToString()},
-                    new SelectListItem { Selected = false, Text = "Закрыта", Value = ((int)Status.Close).ToString()},
-                }, "Value", "Text");
-            avm = appServ.GetAllApps(avm).GetAwaiter().GetResult();
-            smth = "test";
-
-
-            return View(avm);
+            ViewBag.SelectedStatus = selectedStatus;
+            var apps = from s in db.GetTable<BaseApplication>()
+                select s;
+            var statusId = Convert.ToInt32(selectedStatus);
+            if (statusId != 0)
+                apps = apps.Where(x => x.StatusId == statusId);
+            return View(apps.ToList());
         }
 
         // GET: Applications/Details/5

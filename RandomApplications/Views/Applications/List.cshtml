@@ -1,12 +1,8 @@
-﻿@using RandomApplications.Models
-@model RandomApplications.Response.ApplicationsListViewModel
-
+﻿@model IEnumerable<BaseApplication>
 
 @{
     ViewBag.Title = "Applications";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    IEnumerable<BaseApplication> apps = Model.Apps;
-    var firstApp = apps.FirstOrDefault();
 }
 
 <h2>Список заявок</h2>
@@ -15,57 +11,6 @@
     @Html.ActionLink("Создать заявку", "Create")
 </p>
 
-<div>
-    @Html.DropDownListFor(m => m.statusList, Model.statusList, "Select one")
-    @Html.EnumDropDownListFor(model => firstApp.Status, new { @class = "form-control" })
-    @Html.EnumDropDownListFor(m => m.Apps.FirstOrDefault().Status, "Select a status", new { @class = "form-control" })
-    @Html.ValidationMessageFor(m => m.Apps.FirstOrDefault().Status)
-</div>
-@*<form method="get">
-        <div class="form-inline">
-            <label class="control-label">Статус: </label>
-            @Html.DropDownList("status", Model.Status as SelectList,
-                htmlAttributes: new { @class = "form-control" })
-
-            <label class="control-label">Начальная дата: </label>
-            @Html.DropDownList("dateFrom", Model.DateFrom as SelectList,
-                htmlAttributes: new { @class = "form-control" })
-
-            <label class="control-label">Конечная дата: </label>
-            @Html.DropDownList("dateTo", Model.DateTo as SelectList,
-                htmlAttributes: new { @class = "form-control" })
-
-            <input type="submit" value="Применить" class="btn btn-default" />
-        </div>
-    </form>
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DropDownList("Статус",
-                    EnumHelper.GetSelectList(typeof(Status)) ,
-                    "Все",
-                    new { @class = "form-control" })
-                @Html.EnumDropDownListFor(model => app.Status, htmlAttributes: new { @class = "form-control" })
-            </th>
-            <th>
-                @Html.LabelFor(model => model, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => app.DateModify, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => app.DateModify, "", new { @class = "text-danger" })
-                </div>
-            </th>
-            <th>
-                <div class="form-group">
-                    @Html.LabelFor(model =>app.DateModify, htmlAttributes: new { @class = "control-label col-md-2" })
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => app.DateModify, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model =>app.DateModify, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </th>
-            <th></th>
-        </tr>
-    </table>*@
 <table class="table">
     <tr>
         <th>
@@ -82,44 +27,25 @@
         </th>
         <th></th>
     </tr>
-    @foreach (var item in apps)//Model.OrderByDescending(x => x.DateModify))
+    @foreach (var app in Model)
     {
-        /*var statusTitle = string.Empty;
-        switch (item.StatusId)
-        {
-            case 0:
-                statusTitle = "Открыта";
-                break;
-            case 1:
-                statusTitle = "Решена";
-                break;
-            case 2:
-                statusTitle = "Возврат";
-                break;
-            case 3:
-                statusTitle = "Закрыта";
-                break;
-            default:
-                statusTitle = "Неизвестна";
-                break;
-        }*/
         <tr>
             <td>
-                @Html.DisplayFor(appsItem => item.Title, new { htmlAttributes = new { @class = "col-md-12" } })
+                @Html.DisplayFor(appsItem => app.Title, new { htmlAttributes = new { @class = "col-md-12" } })
             </td>
             <td>
-                @Html.DisplayFor(appsItem => item.Description, new { htmlAttributes = new { @class = "col-md-12" } })
+                @Html.DisplayFor(appsItem => app.Description, new { htmlAttributes = new { @class = "col-md-12" } })
             </td>
             <td>
-                @Html.DisplayFor(appsItem => item.Status, new { htmlAttributes = new { @class = "col-md-6" } })
+                @Html.DisplayFor(appsItem => app.Status, new { htmlAttributes = new { @class = "col-md-6" } })
             </td>
             <td>
-                @Html.DisplayFor(appsItem => item.DateModify, new { htmlAttributes = new { @class = "col-md-6" } })
+                @Html.DisplayFor(appsItem => app.DateModify, new { htmlAttributes = new { @class = "col-md-6" } })
             </td>
             <td>
-                @Html.ActionLink("Подробно", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Изменить", "Edit", new { id = item.Id })
-                <!--@Html.ActionLink("Удалить", "Delete", new { id = item.Id })-->
+                @Html.ActionLink("Подробно", "Details", new { id = app.Id }) |
+                @Html.ActionLink("Изменить", "Edit", new { id = app.Id })
+                <!--@Html.ActionLink("Удалить", "Delete", new { id = app.Id })-->
             </td>
         </tr>
     }
