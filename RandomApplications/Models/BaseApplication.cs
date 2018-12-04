@@ -9,7 +9,7 @@ namespace RandomApplications.Models
     ///<summary>
     /// сущность заявки
     /// </summary>
-    [Table(Name = "BaseApplication")]
+    [Table(Name = "BaseApplications")]
     public class BaseApplication
     {
         ///<summary>
@@ -94,19 +94,27 @@ namespace RandomApplications.Models
         ///<summary>
         /// открыта
         /// </summary>
+        [Display(Name = "Все")]
+        All = 0,
+        ///<summary>
+        /// открыта
+        /// </summary>
         [Display(Name = "Открыта")]
         Open = 1,
         ///<summary>
         /// решена
         /// </summary>
+        [Display(Name = "Решена")]
         Ready = 2,
         ///<summary>
         /// возврат
         /// </summary>
+        [Display(Name = "Возвращена")]
         Return = 3,
         ///<summary>
         /// закрыта
         /// </summary>
+        [Display(Name = "Закрыта")]
         Close = 4
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<BaseApplication>
+﻿@model RandomApplications.Response.ApplicationsListViewModel
 
 @{
     ViewBag.Title = "Applications";
@@ -11,65 +11,59 @@
     @Html.ActionLink("Создать заявку", "Create")
 </p>
 
-
-    <table class="table">
-        @using (Html.BeginForm())
-        {
-            <tr>
-                <th>
-                    @Html.DropDownList("status",
-                        EnumHelper.GetSelectList(typeof(Status)),
-                        "Все",
-                        new { @class = "form-control" })
-                </th>
-                <th>
-                    <input type="date" name="dateFrom" />
-                </th>
-                <th>
-                    <input type="date" name="dateTo" />
-                </th>
-                <th>
-                    <input type="submit" value="Применить" />
-                </th>
-            </tr>
-        }
-        
+<table class="table">
+    @using (Html.BeginForm())
+    {
         <tr>
             <th>
-                Название
+                @Html.DropDownList( "status", Model.Statuses, new {@class = "form-control"})
             </th>
             <th>
-                Описание
+                @Html.TextBoxFor(model => model.DateFrom, new { type = "date" })
             </th>
             <th>
-                Статус
+                @Html.TextBoxFor(model => model.DateTo, new { type = "date" })
             </th>
             <th>
-                Дата изменения
+                <input type="submit" value="Применить" />
+            </th>
+        </tr>
+    }
+
+        <tr>
+            <th>
+            Название
+            </th>
+            <th>
+            Описание
+            </th>
+            <th>
+            Статус
+            </th>
+            <th>
+            Дата изменения
             </th>
             <th></th>
         </tr>
-        @foreach (var app in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(appsItem => app.Title, new { htmlAttributes = new { @class = "col-md-12" } })
-                </td>
-                <td>
-                    @Html.DisplayFor(appsItem => app.Description, new { htmlAttributes = new { @class = "col-md-12" } })
-                </td>
-                <td>
-                    @Html.DisplayFor(appsItem => app.Status, new { htmlAttributes = new { @class = "col-md-6" } })
-                </td>
-                <td>
-                    @Html.DisplayFor(appsItem => app.DateModify, new { htmlAttributes = new { @class = "col-md-6" } })
-                </td>
-                <td>
-                    @Html.ActionLink("Подробно", "Details", new { id = app.Id }) |
-                    @Html.ActionLink("Изменить", "Edit", new { id = app.Id })
-                    <!--@Html.ActionLink("Удалить", "Delete", new {id = app.Id})-->
-                </td>
-            </tr>
-            }
+    @foreach (var app in Model.Apps)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(appsItem => app.Title, new { htmlAttributes = new { @class = "col-md-12" } })
+            </td>
+            <td>
+                @Html.DisplayFor(appsItem => app.Description, new { htmlAttributes = new { @class = "col-md-12" } })
+            </td>
+            <td>
+                @Html.DisplayFor(appsItem => app.Status, new { htmlAttributes = new { @class = "col-md-6" } })
+            </td>
+            <td>
+                @Html.DisplayFor(appsItem => app.DateModify, new { htmlAttributes = new { @class = "col-md-6" } })
+            </td>
+            <td>
+                @Html.ActionLink("Изменить", "Edit", new { id = app.Id })
+            </td>
+        </tr>
+    }
 
-        </table>
+</table>

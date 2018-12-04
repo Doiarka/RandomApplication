@@ -147,6 +147,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Models\BaseContext.cs" />
+    <Compile Include="Request\EditApplicationRequest.cs" />
+    <Compile Include="Request\CreateApplicationRequest.cs" />
     <Compile Include="Response\ApplicationsListViewModel.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -253,11 +255,9 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Applications\List.cshtml" />
-    <Content Include="Views\Applications\Details.cshtml" />
     <Content Include="Views\Applications\Create.cshtml" />
     <Content Include="Views\Applications\Edit.cshtml" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
   </ItemGroup>

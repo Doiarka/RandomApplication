@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System.Configuration;
+using System.Data.Entity;
 
 namespace RandomApplications.Models
 {

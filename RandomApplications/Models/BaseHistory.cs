@@ -7,7 +7,7 @@ namespace RandomApplications.Models
     ///<summary>
     /// сущность истории изменения статуса заявки
     /// </summary>
-    [Table(Name = "BaseHistory")]
+    [Table(Name = "BaseHistories")]
     public class BaseHistory
     {
         ///<summary>
