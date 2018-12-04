@@ -13,6 +13,7 @@ using Newtonsoft;
 using Newtonsoft.Json;
 using RandomApplications.Response;
 using RandomApplications.Utils;
+using System.Data.Entity;
 
 namespace RandomApplications.Services
 {

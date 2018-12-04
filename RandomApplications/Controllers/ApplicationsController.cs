@@ -17,9 +17,10 @@ namespace RandomApplications.Controllers
 {
     public class ApplicationsController : Controller
     {
-        private static readonly string defaultConnection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-        DataContext db = new DataContext(defaultConnection);
+        //private static readonly string defaultConnection = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        //DataContext db = new DataContext(defaultConnection);
         ApplicationService appServ = new ApplicationService();
+        BaseContext db = new BaseContext();
 
         // GET: Applications/List
         public ActionResult List(FormCollection collection)
@@ -27,8 +28,8 @@ namespace RandomApplications.Controllers
             var statusStr = collection["status"] ?? "0";
             var dateFrom = collection["dateFrom"] ?? null;
             var dateTo = collection["dateTo"] ?? null;
-            var apps = from s in db.GetTable<BaseApplication>()
-                select s;
+            var apps = db.BaseApplications.AsQueryable();
+            //var apps = from s in db.GetTable<BaseApplication>() select s;
             var statusId = statusStr == "Все" ? 0 : statusStr == "" ? 0 : int.Parse(statusStr);
             if (statusId != 0)
                 apps = apps.Where(x => x.StatusId == statusId);
