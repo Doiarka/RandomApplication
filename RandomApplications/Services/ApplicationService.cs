@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading.Tasks;
 using RandomApplications.Models;
@@ -13,11 +12,19 @@ using RandomApplications.Utils;
 
 namespace RandomApplications.Services
 {
-    public class ApplicationService : IApplicationService
+    /// <summary>
+    /// сервис заявок
+    /// </summary>
+    public class ApplicationService
     {
         private BaseContext db = new BaseContext();
 
-        public async Task<ApplicationsListViewModel> GetAllApps(ApplicationsListViewModel model)
+        /// <summary>
+        /// получить список заявок
+        /// </summary>
+        /// <param name="model">модель списка заявок</param>
+        /// <returns>модель списка заявок</returns>
+        public async Task<ApplicationsResponse> GetAllApps(ApplicationsResponse model)
         {
             var apps = db.BaseApplications.ToList();
             if (model.Status != Status.All)
@@ -32,6 +39,10 @@ namespace RandomApplications.Services
             return model;
         }
 
+        /// <summary>
+        /// создать заявку
+        /// </summary>
+        /// <param name="request">модель создания заявки</param>
         public async Task CreateApp(CreateApplicationRequest request)
         {
             try
@@ -67,12 +78,17 @@ namespace RandomApplications.Services
                 app.HistoryIds = appHistory.SerializeToJson();
                 db.SaveChanges();
             }
-            catch (Exception ex)
+            catch
             {
 
             }
         }
 
+        /// <summary>
+        /// информация о заявке
+        /// </summary>
+        /// <param name="request">модель изменения заявки</param>
+        /// <returns>модель изменения заявки</returns>
         public async Task<EditApplicationRequest> GetDetailApp(EditApplicationRequest request)
         {
             var app = db.BaseApplications.FirstOrDefault(x => x.Id == request.Id);
@@ -83,6 +99,11 @@ namespace RandomApplications.Services
             return request;
         }
 
+        /// <summary>
+        /// изменить заявку
+        /// </summary>
+        /// <param name="request">модель изменения заявки</param>
+        /// <returns></returns>
         public async Task EditApp(EditApplicationRequest request)
         {
             try
@@ -116,20 +137,11 @@ namespace RandomApplications.Services
                 app.HistoryIds = appHistory.SerializeToJson();
                 db.SaveChanges();
             }
-            catch (Exception ex)
+            catch
             {
 
             }
         }
-    }
-
-    public interface IApplicationService
-    {
-        Task<ApplicationsListViewModel> GetAllApps(ApplicationsListViewModel model);
-        
-        Task CreateApp(CreateApplicationRequest request);
-
-        Task<EditApplicationRequest> GetDetailApp(EditApplicationRequest request);
     }
 }
 

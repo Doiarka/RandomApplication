@@ -1,7 +1,7 @@
-﻿@model RandomApplications.Response.ApplicationsListViewModel
+﻿@model RandomApplications.Response.ApplicationsResponse
 
 @{
-    ViewBag.Title = "Applications";
+    ViewBag.Title = "Список заявок";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -47,6 +47,7 @@
         </tr>
     @foreach (var app in Model.Apps)
     {
+        var statusName = app.Status.GetDisplayName();
         <tr>
             <td>
                 @Html.DisplayFor(appsItem => app.Title, new { htmlAttributes = new { @class = "col-md-12" } })
@@ -55,7 +56,8 @@
                 @Html.DisplayFor(appsItem => app.Description, new { htmlAttributes = new { @class = "col-md-12" } })
             </td>
             <td>
-                @Html.DisplayFor(appsItem => app.Status, new { htmlAttributes = new { @class = "col-md-6" } })
+                
+                    @Html.DisplayFor(appsItem => statusName, new { htmlAttributes = new { @class = "col-md-6" } })
             </td>
             <td>
                 @Html.DisplayFor(appsItem => app.DateModify, new { htmlAttributes = new { @class = "col-md-6" } })

@@ -7,32 +7,47 @@ using RandomApplications.Request;
 
 namespace RandomApplications.Controllers
 {
+    /// <summary>
+    /// контроллер заявок
+    /// </summary>
     public class ApplicationsController : Controller
     {
         ApplicationService appServ = new ApplicationService();
 
-        // GET: Applications/List
-        public ActionResult List(ApplicationsListViewModel model)
+        /// <summary>
+        /// получить список заявок
+        /// URL: Applications/List
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ActionResult List(ApplicationsResponse model)
         {
             model = appServ.GetAllApps(model).GetAwaiter().GetResult();
             return View(model);
         }
 
-        // GET: Applications/Create
+        /// <summary>
+        /// представление создания заявки
+        /// URL: Applications/Create
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Applications/Create
+        /// <summary>
+        /// создать заявку
+        /// URL: Applications/Create
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>возврат на страницу списка заявок</returns>
         [HttpPost]
         public ActionResult Create(CreateApplicationRequest request)
         {
             try
             {
-                //var title = collection[1];
-                //var description = collection[2];
-            
                 appServ.CreateApp(request).GetAwaiter().GetResult();
 
                 return RedirectToAction("List");
@@ -42,17 +57,35 @@ namespace RandomApplications.Controllers
                 return View();
             }
         }
-        
-        // GET: Applications/Edit/5
+
+        /// <summary>
+        /// представление просмотра заявки и изменения ее статуса
+        /// URL: Applications/Edit/{long:Id}
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpGet]
         public ActionResult Edit(EditApplicationRequest request)
         {
-            //var app = appServ.GetDetailApp(request.Id).GetAwaiter().GetResult();
-            //ViewBag.Histories = appServ.GetAppHistories().GetAwaiter().GetResult();
-            request = appServ.GetDetailApp(request).GetAwaiter().GetResult();
+            try
+            {
+                request = appServ.GetDetailApp(request).GetAwaiter().GetResult();
+            }
+            catch
+            {
+                return RedirectToAction("List");
+            }
+            
             return View(request);
         }
-        
-        // POST: Applications/Edit/5
+
+        /// <summary>
+        /// изменить статус заявки
+        /// URL: Applications/Edit/{long:Id}
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="answer">название действия над заявкой</param>
+        /// <returns>возврат на страницу списка заявок</returns>
         [HttpPost]
         public ActionResult Edit(EditApplicationRequest request, string answer)
         {
@@ -75,19 +108,15 @@ namespace RandomApplications.Controllers
                         default:
                             break;
                     }
-                    //var statusId  = Convert.ToInt32(collection[2]);
                     request.StatusNew = status;
                     appServ.EditApp(request).GetAwaiter().GetResult();
                 }
-                //var title = collection[2];
-                //var description = collection[3];
-                
 
                 return RedirectToAction("List");
             }
             catch
             {
-                return View();
+                return View(request);
             }
         }
     }

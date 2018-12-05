@@ -1,12 +1,11 @@
 ﻿@model RandomApplications.Request.CreateApplicationRequest
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Новая заявка";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Новая заявка</h2>
-
 
 @using (Html.BeginForm()) 
 {
@@ -40,7 +39,7 @@
 }
 
 <div>
-    @Html.ActionLink("Назад к списку", "List")
+    @Html.ActionLink("Вернуться к списку заявок", "List")
 </div>
 
 @section Scripts {

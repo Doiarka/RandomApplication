@@ -1,30 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Linq.Mapping;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 
 namespace RandomApplications.Models
 {
-    ///<summary>
+    /// <summary>
     /// сущность заявки
     /// </summary>
     [Table(Name = "BaseApplications")]
     public class BaseApplication
     {
-        ///<summary>
+        /// <summary>
         /// ид
         /// </summary>
         [Column(IsPrimaryKey = true, IsDbGenerated = true)]
         public long Id { get; set; }
 
-        ///<summary>
+        /// <summary>
         /// название
         /// </summary>
         [Column]
         public string Title { get; set; }
 
-        ///<summary>
+        /// <summary>
         /// описание
         /// </summary>
         [Column]
@@ -32,86 +30,53 @@ namespace RandomApplications.Models
         [UIHint("Description")]
         public string Description { get; set; }
 
-        ///<summary>
-        /// ид статуса
-        /// </summary>
-        [Column]
-        public virtual int StatusId { get; set; }
-
-        ///<summary>
+        /// <summary>
         /// статус
         /// </summary>
         [EnumDataType(typeof(Status))]
-        [Range(1, int.MaxValue, ErrorMessage = "Select a correct license")]
-        public Status Status
-        {
-            get
-            {
-                return (Status)StatusId;
-            }
-            set
-            {
-                StatusId = (int)value;
-            }
-        }
+        [Range(1, 4, ErrorMessage = "Select a correct status")]
+        public Status Status { get; set; }
 
-        ///<summary>
+        /// <summary>
         /// дата изменения
         /// </summary>
         [Column]
         [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd HH:mm}")]
         public DateTime DateModify { get; set; }
 
-        ///<summary>
-        /// список ид историй изменения
-        /// </summary>
-        /*public virtual List<long> HistoryIdsList
-        {
-            get
-            {
-                return HistoryIds == null ?
-                    new List<long>() :
-                    HistoryIds.Split(',').Select(n => Convert.ToInt64(n)).ToList();
-            }
-            set
-            {
-                HistoryIds = string.Join(",", value);
-            }
-        }*/
-
-        ///<summary>
+        /// <summary>
         /// список ид историй изменения
         /// </summary>
         [Column]
         public string HistoryIds { get; set; }
     }
 
-    ///<summary>
+    /// <summary>
     /// статусы заявки
     /// </summary>
     public enum Status
     {
-        ///<summary>
-        /// открыта
+        /// <summary>
+        /// все
         /// </summary>
         [Display(Name = "Все")]
         All = 0,
-        ///<summary>
+        /// <summary>
         /// открыта
         /// </summary>
         [Display(Name = "Открыта")]
         Open = 1,
-        ///<summary>
+        /// <summary>
         /// решена
         /// </summary>
         [Display(Name = "Решена")]
         Ready = 2,
-        ///<summary>
+        /// <summary>
         /// возврат
         /// </summary>
         [Display(Name = "Возвращена")]
         Return = 3,
-        ///<summary>
+        /// <summary>
         /// закрыта
         /// </summary>
         [Display(Name = "Закрыта")]

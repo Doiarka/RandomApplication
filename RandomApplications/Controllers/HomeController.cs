@@ -6,11 +6,18 @@ using System.Web.Mvc;
 
 namespace RandomApplications.Controllers
 {
+    /// <summary>
+    /// стандартный контроллер
+    /// </summary>
     public class HomeController : Controller
     {
+        /// <summary>
+        /// главная страница
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
-            ViewBag.Title = "Home Page";
+            ViewBag.Title = "Главная";
 
             return View();
         }
